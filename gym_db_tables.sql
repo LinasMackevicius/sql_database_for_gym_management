@@ -389,6 +389,7 @@ CREATE TABLE IF NOT EXISTS `gym2`.`sporto_klubo_vieta` (
     REFERENCES `gym2`.`sporto_klubas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
+
   CONSTRAINT `fk_sporto_klubo_vieta_miestas1`
     FOREIGN KEY (`miestas_id`)
     REFERENCES `gym2`.`miestas` (`id`)
@@ -408,11 +409,13 @@ CREATE TABLE IF NOT EXISTS `gym2`.`asmenine_treniruote` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `asmeninis_treneris_id` INT NOT NULL,
   `sporto_klubo_vieta_id` INT NOT NULL,
+  `klientas_id` INT NOT NULL UNIQUE,
   `treniruotes_pradzia` DATETIME NOT NULL,
   `treniruotes_pabaiga` DATETIME NOT NULL, -- Minimum 1 hour session duration;
   PRIMARY KEY (`id`),
   INDEX `fk_asmenine_treniruote_asmeninis_treneris1_idx` (`asmeninis_treneris_id` ASC) VISIBLE,
   INDEX `fk_asmenine_treniruote_sporto_klubo_vieta1_idx` (`sporto_klubo_vieta_id` ASC) VISIBLE,
+  INDEX `fk_asmenine_treniruote_klientas1_idx` (`klientas_id` ASC) VISIBLE,
   UNIQUE INDEX `unique_asmeninis_treneris_pradzia` (`asmeninis_treneris_id` ASC, `treniruotes_pradzia` ASC) VISIBLE,
   CONSTRAINT `fk_asmenine_treniruote_asmeninis_treneris1`
     FOREIGN KEY (`asmeninis_treneris_id`)
@@ -424,36 +427,12 @@ CREATE TABLE IF NOT EXISTS `gym2`.`asmenine_treniruote` (
     REFERENCES `gym2`.`sporto_klubo_vieta` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
-  )
-ENGINE = InnoDB;
-SHOW WARNINGS;
-
--- -----------------------------------------------------
--- Table `gym2`.`kliento_treniruote`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `gym2`.`kliento_treniruote` ;
-
-SHOW WARNINGS;
-CREATE TABLE IF NOT EXISTS `gym2`.`kliento_treniruote` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `asmenine_treniruote_id` INT NOT NULL,
-  `klientas_id` INT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_kliento_treniruote_asmenine_treniruote1_idx` (`asmenine_treniruote_id` ASC) VISIBLE,
-  INDEX `fk_kliento_treniruote_klientas1_idx` (`klientas_id` ASC) VISIBLE,
-
-  UNIQUE INDEX `unique_asmenine_treniruote_klientas` (`asmenine_treniruote_id`, `klientas_id`),
-  CONSTRAINT `fk_kliento_treniruote_asmenine_treniruote1`
-    FOREIGN KEY (`asmenine_treniruote_id`)
-    REFERENCES `gym2`.`asmenine_treniruote` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_kliento_treniruote_klientas1`
+  CONSTRAINT `fk_asmenine_treniruote_klientas1`
     FOREIGN KEY (`klientas_id`)
     REFERENCES `gym2`.`klientas` (`id`)
-    ON DELETE SET NULL
+    ON DELETE CASCADE
     ON UPDATE NO ACTION
-)
+  )
 ENGINE = InnoDB;
 SHOW WARNINGS;
 
