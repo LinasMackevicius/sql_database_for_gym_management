@@ -409,9 +409,9 @@ CREATE TABLE IF NOT EXISTS `gym2`.`asmenine_treniruote` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `asmeninis_treneris_id` INT NOT NULL,
   `sporto_klubo_vieta_id` INT NOT NULL,
-  `klientas_id` INT NOT NULL UNIQUE,
+  `klientas_id` INT NOT NULL,
   `treniruotes_pradzia` DATETIME NOT NULL,
-  `treniruotes_pabaiga` DATETIME NOT NULL, -- Minimum 1 hour session duration;
+  `treniruotes_pabaiga` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_asmenine_treniruote_asmeninis_treneris1_idx` (`asmeninis_treneris_id` ASC) VISIBLE,
   INDEX `fk_asmenine_treniruote_sporto_klubo_vieta1_idx` (`sporto_klubo_vieta_id` ASC) VISIBLE,
@@ -430,7 +430,7 @@ CREATE TABLE IF NOT EXISTS `gym2`.`asmenine_treniruote` (
   CONSTRAINT `fk_asmenine_treniruote_klientas1`
     FOREIGN KEY (`klientas_id`)
     REFERENCES `gym2`.`klientas` (`id`)
-    ON DELETE CASCADE
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION
   )
 ENGINE = InnoDB;
@@ -480,7 +480,7 @@ CREATE TABLE IF NOT EXISTS `gym2`.`grupines_treniruotes_sesija` (
   CONSTRAINT `fk_grupines_treniruotes_sesija_grupine_treniruote1`
     FOREIGN KEY (`grupine_treniruote_grupines_treniruotes_id`)
     REFERENCES `gym2`.`grupine_treniruote` (`grupines_treniruotes_id`)
-    ON DELETE NO ACTION
+    ON DELETE NO ACTION 
     ON UPDATE NO ACTION
 )
 ENGINE = InnoDB;
