@@ -32,13 +32,26 @@ CREATE TABLE IF NOT EXISTS `gym2`.`klientas` (
   `adresas` VARCHAR (100),
   `miestas_id` INT NOT NULL, 
   PRIMARY KEY (`id`) NOT NULL,
-  INDEX `fk_klientas_miestas1_idx` (`miestas_id`)
+  INDEX `fk_klientas_miestas1_idx` (`miestas_id`),
   CONSTRAINT `fk_klientas_miestas1`
     FOREIGN KEY (`miestas_id`)
     REFERENCES `gym2`.`miestas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
   )
+ENGINE = InnoDB; 
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `gym2`.`paskyros_busena`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `gym2`.`paskyros_busena`;
+SHOW WARNINGS;
+
+CREATE TABLE IF NOT EXISTS `gym2`.`paskyros_busena` (
+  `id` INT NOT NULL,
+  `pavadinimas` VARCHAR(255) NOT NULL UNIQUE
+)
 ENGINE = InnoDB; 
 SHOW WARNINGS;
 
@@ -52,13 +65,20 @@ CREATE TABLE IF NOT EXISTS `gym2`.`kliento_paskyra` (
   `klientas_id` INT NOT NULL,
   `el_pastas` VARCHAR(255) NOT NULL UNIQUE,
   `slaptazodis_hash` VARCHAR(255) NOT NULL,
-  `paskyros_busena` ENUM('aktyvi', 'atostogos', 'uzblokuota', 'nepatvirtinta') DEFAULT 'nepatvirtinta',
+  `paskyros_busena_id` INT NOT NULL,
   `sukurimo_data` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX `fk_kliento_paskyra_klientas1_idx` (`klientas_id`),
+  INDEX `fk_kliento_paskyra_paskyros_busena1_idx` (`paskyros_busena_id`),
   PRIMARY KEY (`klientas_id`),
   CONSTRAINT `fk_kliento_paskyra_klientas1`
     FOREIGN KEY (`klientas_id`)
     REFERENCES `gym2`.`klientas` (`id`)
     ON DELETE CASCADE
+    ON UPDATE NO ACTION
+  CONSTRAINT `fk_kliento_paskyra_paskyros_busena1`
+    FOREIGN KEY (`paskyros_busena_id`)
+    REFERENCES `gym2`.`paskyros_busena` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION
 )
 ENGINE = InnoDB; 
@@ -174,7 +194,52 @@ CREATE TABLE IF NOT EXISTS `gym2`.`saskaita` (
     FOREIGN KEY (`pardavejas_id`)
     REFERENCES `gym2`.`pardavejas` (`sporto_klubas_id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+)
+ENGINE = InnoDB; 
+SHOW WARNINGS;
+
+
+
+-- -----------------------------------------------------
+-- Table `gym2`.`apmokejimo_budas`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `gym2`.`apmokejimo_budas` ;
+SHOW WARNINGS;
+
+CREATE TABLE IF NOT EXISTS `gym2`.`apmokejimo_budas` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `aprasymas` VARCHAR(100) NOT NULL
+)
+ENGINE = InnoDB; 
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `gym2`.`apmokejimas`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `gym2`.`apmokejimas` ;
+SHOW WARNINGS;
+
+CREATE TABLE IF NOT EXISTS `gym2`.`apmokejimas` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `saskaita_id` INT NOT NULL,
+  `suma` DECIMAL(10,2) NOT NULL,
+  `data` DATE NOT NULL,
+  `apmokejimo_budas_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_apmokejimas_saskaita1_idx` (`saskaita_id`),
+  INDEX `fk_apmokejimo_budas_apmokejimas1_idx` (`apmokejimo_budas_id`),
+  CONSTRAINT `fk_apmokejimas_saskaita1` 
+    FOREIGN KEY (`saskaita_id`)
+    REFERENCES `gym2`.`saskaita` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION,
+  
+  CONSTRAINT `fk_apmokejimo_budas_apmokejimas1` 
+    FOREIGN KEY (`apmokejimo_budas_id`)
+    REFERENCES `gym2`.`apmokejimo_budas` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
 )
 ENGINE = InnoDB; 
 SHOW WARNINGS;
@@ -189,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `gym2`.`saskaitos_eilute` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `narystes_kodas_id` INT NULL,
   `saskaita_id` INT NOT NULL,
-  -- `produktas` VARCHAR(100) NOT NULL, `narystes_kodas_id` is the product name,,,, 
+  `produktas` VARCHAR(100) NOT NULL, 
   `kiekis` INT NOT NULL,
   `kaina_be_pvm` DECIMAL(10,2) NOT NULL,
   `pvm_tarifas` DECIMAL(5,2) NOT NULL, -- e.g. 21.00 for 21%
@@ -198,11 +263,12 @@ CREATE TABLE IF NOT EXISTS `gym2`.`saskaitos_eilute` (
   PRIMARY KEY (`id`),
   INDEX `fk_saskaitos_eilute_saskaita1_idx` (`saskaita_id`),
   INDEX `fk_saskaitos_eilute_narystes_kodas1_idx` (`narystes_kodas_id`),
+  -- UNIQUE (`saskaita_id`, `narystes_kodas_id`),?
   CONSTRAINT `fk_saskaitos_eilute_saskaita1`
     FOREIGN KEY (`saskaita_id`)
     REFERENCES `gym2`.`saskaita` (`id`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_saskaitos_eilute_narystes_kodas1`
     FOREIGN KEY (`narystes_kodas_id`)
     REFERENCES `gym2`.`narystes_kodas` (`id`)
@@ -428,7 +494,7 @@ SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `gym2`.`kliento_abonementas` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `sutarties_numeris` VARCHAR(45) NULL,
-  `klientas_id` INT NOT NULL UNIQUE,
+  `klientas_id` INT NOT NULL,
   `narystes_kodas_id` INT NULL,
   `mokejimo_budas_id` INT NOT NULL,
   `galiojimo_pradzia` DATE NOT NULL,
@@ -438,6 +504,7 @@ CREATE TABLE IF NOT EXISTS `gym2`.`kliento_abonementas` (
   INDEX `fk_kliento_abonementas_klientas1_idx` (`klientas_id`),
   INDEX `fk_kliento_abonementas_mokejimo_budas1_idx` (`mokejimo_budas_id`),
   INDEX `fk_kliento_abonementas_narystes_kodas1_idx` (`narystes_kodas_id`),
+  UNIQUE (`klientas_id`, `narystes_kodas_id`),
   CONSTRAINT `fk_kliento_abonementas_klientas1`
     FOREIGN KEY (`klientas_id`)
     REFERENCES `gym2`.`klientas` (`id`)
