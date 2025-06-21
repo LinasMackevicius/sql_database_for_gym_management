@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS `gym2`.`miestas` ;
 
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `gym2`.`miestas` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `pavadinimas` VARCHAR(45) NOT NULL UNIQUE,
   PRIMARY KEY (`id`)
 )
@@ -42,14 +42,86 @@ CREATE TABLE IF NOT EXISTS `gym2`.`klientas` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `vardas` VARCHAR(100) NOT NULL,
   `pavarde` VARCHAR(100) NOT NULL,
-  `asmens_kodas`  VARCHAR(13) NULL,
-  `adresas` VARCHAR (100),
+  `asmens_kodas` VARCHAR(13) NOT NULL UNIQUE,
+  `adresas` VARCHAR (100) NOT NULL,
   `miestas_id` INT NOT NULL, 
   PRIMARY KEY (`id`) NOT NULL,
   INDEX `fk_klientas_miestas1_idx` (`miestas_id`),
   CONSTRAINT `fk_klientas_miestas1`
     FOREIGN KEY (`miestas_id`)
     REFERENCES `gym2`.`miestas` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+  )
+ENGINE = InnoDB; 
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `gym2`.`pirkejas`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `gym2`.`pirkejas` ;
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `gym2`.`pirkejas` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `tipas` ENUM ('fizinis', 'juridinis') NOT NULL,
+  PRIMARY KEY (`id`)
+  )
+ENGINE = InnoDB; 
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `gym2`.`juridinis_asmuo`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `gym2`.`juridinis_asmuo` ;
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `gym2`.`juridinis_asmuo` (
+  `pirkejas_id` INT NOT NULL,
+  `pavadinimas` VARCHAR(100) NOT NULL,
+  `pvm_moketojo_kodas` VARCHAR(100) NOT NULL UNIQUE,
+  `imones_kodas` VARCHAR(13) NOT NULL UNIQUE,
+  `banko_pavadinimas` VARCHAR(100) NULL,
+  `banko_saskaita` VARCHAR(100) NULL UNIQUE,
+  `adresas` VARCHAR(100) NULL,
+  `miestas_id` INT NOT NULL,
+  PRIMARY KEY (`pirkejas_id`),
+  INDEX `fk_juridinis_asmuo_pirkejas1_idx` (`pirkejas_id`),
+  INDEX `fk_juridinis_asmuo_miestas1_idx` (`miestas_id`),
+
+  CONSTRAINT `fk_juridinis_asmuo_pirkejas1`
+    FOREIGN KEY (`pirkejas_id`)
+    REFERENCES `gym2`.`pirkejas` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_juridinis_asmuo_miestas1`
+    FOREIGN KEY (`miestas_id`)
+    REFERENCES `gym2`.`miestas` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+  )
+ENGINE = InnoDB; 
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `gym2`.`fizinis_asmuo`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `gym2`.`fizinis_asmuo` ;
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `gym2`.`fizinis_asmuo` (
+  `pirkejas_id` INT NOT NULL,
+  `klientas_id` INT NOT NULL UNIQUE,
+  `banko_pavadinimas` VARCHAR(100) NULL,
+  `banko_saskaita` VARCHAR(100) NULL UNIQUE,
+  PRIMARY KEY (`pirkejas_id`),
+  INDEX `fizinis_asmuo_pirkejas1_idx` (`pirkejas_id`),
+  INDEX `fk_fizinis_asmuo_klientas1_idx` (`klientas_id`),
+  CONSTRAINT `fk_fizinis_asmuo_pirkejas1`
+    FOREIGN KEY (`pirkejas_id`)
+    REFERENCES `gym2`.`pirkejas` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_fizinis_asmuo_klientas1`
+    FOREIGN KEY (`klientas_id`)
+    REFERENCES `gym2`.`klientas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
   )
@@ -81,10 +153,10 @@ SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `gym2`.`preke` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `pavadinimas` VARCHAR(255) NOT NULL,
+  `aprasymas` VARCHAR(255) NULL,
   `tipas` ENUM('naryste', 'paslauga', 'preke') NOT NULL, 
   `standartine_kaina` DECIMAL(10,2) NOT NULL,
-  PRIMARY KEY (id),
-  UNIQUE (`pavadinimas`)
+  PRIMARY KEY (`id`)
 )
 ENGINE = InnoDB; 
 SHOW WARNINGS;
@@ -115,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `gym2`.`narystes_kodas` (
   CONSTRAINT `fk_narystes_kodas_preke1`
     FOREIGN KEY (`preke_id`)
     REFERENCES `gym2`.`preke` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION
   )
 ENGINE = InnoDB;
@@ -153,7 +225,7 @@ CREATE TABLE IF NOT EXISTS `gym2`.`kliento_paskyra` (
     FOREIGN KEY (`klientas_id`)
     REFERENCES `gym2`.`klientas` (`id`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_kliento_paskyra_paskyros_busena1`
     FOREIGN KEY (`paskyros_busena_id`)
     REFERENCES `gym2`.`paskyros_busena` (`id`)
@@ -254,7 +326,7 @@ SHOW WARNINGS;
 
 CREATE TABLE IF NOT EXISTS `gym2`.`saskaita` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `klientas_id` INT NOT NULL,
+  `pirkejas_id` INT NOT NULL,
   `pardavejas_id` INT NOT NULL,
   `paslaugu_menuo` DATE NOT NULL,
   `saskaitos_formavimo_data` DATE NOT NULL,
@@ -263,11 +335,11 @@ CREATE TABLE IF NOT EXISTS `gym2`.`saskaita` (
   `busena` ENUM ('apmoketa','neapmoketa') DEFAULT 'neapmoketa',
   `saskaitos_numeris` VARCHAR(50) NOT NULL UNIQUE,
   PRIMARY KEY (`id`),
-  INDEX `fk_saskaita_klientas1_idx` (`klientas_id`),
+  INDEX `fk_saskaita_pirkejas1_idx` (`pirkejas_id`),
   INDEX `fk_saskaita_pardavejas1_idx` (`pardavejas_id`),
-  CONSTRAINT `fk_saskaita_klientas1` 
-    FOREIGN KEY (`klientas_id`)
-    REFERENCES `gym2`.`klientas` (`id`)
+  CONSTRAINT `fk_saskaita_pirkejas1` 
+    FOREIGN KEY (`pirkejas_id`)
+    REFERENCES `gym2`.`pirkejas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_saskaita_pardavejas1` 
@@ -397,13 +469,13 @@ CREATE TABLE IF NOT EXISTS `gym2`.`asmeninio_trenerio_klubas` (
   CONSTRAINT `fk_asmeninio_trenerio_klubas_asmeninis_treneris1`
     FOREIGN KEY (`asmeninis_treneris_id`)
     REFERENCES `gym2`.`asmeninis_treneris` (`id`)
-    ON DELETE NOT ACTION
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION,
 
   CONSTRAINT `fk_asmeninio_trenerio_klubas_sporto_klubo_filialas1`
     FOREIGN KEY (`sporto_klubo_filialas_id`)
     REFERENCES `gym2`.`sporto_klubo_filialas` (`id`)
-    ON DELETE NOT ACTION
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION
   )
 ENGINE = InnoDB;
@@ -535,7 +607,7 @@ CREATE TABLE IF NOT EXISTS `gym2`.`grupes_treneris` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `vardas` VARCHAR(100) NOT NULL,
   `pavarde` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`)  
 )
 ENGINE = InnoDB;
 SHOW WARNINGS;
@@ -604,7 +676,7 @@ CREATE TABLE IF NOT EXISTS `gym2`.`sporto_klubo_filialas` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `sporto_klubas_id` INT NOT NULL,
   `miestas_id` INT NOT NULL,
-  `adresas` VARCHAR(45) NOT NULL,
+  `adresas` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_sporto_klubo_filialas_sporto_klubas1_idx` (`sporto_klubas_id`),
   INDEX `fk_sporto_klubo_filialas_miestas1_idx` (`miestas_id`),
@@ -637,10 +709,10 @@ CREATE TABLE IF NOT EXISTS `gym2`.`asmenine_treniruote` (
   `treniruotes_pradzia` DATETIME NOT NULL,
   `treniruotes_pabaiga` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_asmenine_treniruote_asmeninis_treneris1_idx` (`asmeninis_treneris_id` ASC) VISIBLE,
-  INDEX `fk_asmenine_treniruote_sporto_klubo_filialas1_idx` (`sporto_klubo_filialas_id` ASC) VISIBLE,
-  INDEX `fk_asmenine_treniruote_klientas1_idx` (`klientas_id` ASC) VISIBLE,
-  UNIQUE INDEX `unique_asmeninis_treneris_pradzia` (`asmeninis_treneris_id` ASC, `treniruotes_pradzia` ASC) VISIBLE,
+  INDEX `fk_asmenine_treniruote_asmeninis_treneris1_idx` (`asmeninis_treneris_id`),
+  INDEX `fk_asmenine_treniruote_sporto_klubo_filialas1_idx` (`sporto_klubo_filialas_id`),
+  INDEX `fk_asmenine_treniruote_klientas1_idx` (`klientas_id`),
+  UNIQUE INDEX `unique_asmeninis_treneris_pradzia` (`asmeninis_treneris_id`, `treniruotes_pradzia`),
   CONSTRAINT `fk_asmenine_treniruote_asmeninis_treneris1`
     FOREIGN KEY (`asmeninis_treneris_id`)
     REFERENCES `gym2`.`asmeninis_treneris` (`id`)
@@ -669,8 +741,8 @@ SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `gym2`.`grupine_treniruote` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `pavadinimas` VARCHAR(45) NOT NULL,
-  `intensyvumas` ENUM('zemas', 'vidutinis', 'aukstas') NOT NULL,
-  `sudetingumas` ENUM('zemas', 'vidutinis', 'aukstas') NOT NULL,
+  `intensyvumas` ENUM ('zemas', 'vidutinis', 'aukstas') NOT NULL,
+  `sudetingumas` ENUM ('zemas', 'vidutinis', 'aukstas') NOT NULL,
   PRIMARY KEY (`id`)
 )
 ENGINE = InnoDB;
@@ -690,9 +762,9 @@ CREATE TABLE IF NOT EXISTS `gym2`.`grupines_treniruotes_sesija` (
   `sporto_klubo_filialas_id` INT NOT NULL,
   `grupine_treniruote_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_grupines_treniruotes_sesija_grupes_treneris1_idx` (`grupes_treneris_id` ASC) VISIBLE,
-  INDEX `fk_grupines_treniruotes_sesija_sporto_klubo_filialas1_idx` (`sporto_klubo_filialas_id` ASC) VISIBLE,
-  INDEX `fk_grupines_treniruotes_sesija_grupine_treniruote1_idx` (`grupine_treniruote_id` ASC) VISIBLE,
+  INDEX `fk_grupines_treniruotes_sesija_grupes_treneris1_idx` (`grupes_treneris_id`),
+  INDEX `fk_grupines_treniruotes_sesija_sporto_klubo_filialas1_idx` (`sporto_klubo_filialas_id`),
+  INDEX `fk_grupines_treniruotes_sesija_grupine_treniruote1_idx` (`grupine_treniruote_id`),
   CONSTRAINT `fk_grupines_treniruotes_sesija_grupes_treneris1`
     FOREIGN KEY (`grupes_treneris_id`)
     REFERENCES `gym2`.`grupes_treneris` (`id`)
@@ -720,11 +792,12 @@ DROP TABLE IF EXISTS `gym2`.`kliento_grupines_treniruotes_sesija` ;
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `gym2`.`kliento_grupines_treniruotes_sesija` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `klientas_id` INT NULL,
-  `grupines_treniruotes_sesija_id` INT NULL,
+  `klientas_id` INT NOT NULL,
+  `grupines_treniruotes_sesija_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_kliento_grupines_treniruotes_sesija_klientas1_idx` (`klientas_id` ASC) VISIBLE,
-  INDEX `fk_kliento_grupines_treniruotes_sesija_grupines_treniruotes_idx` (`grupines_treniruotes_sesija_id` ASC) VISIBLE,
+  UNIQUE (`klientas_id`, `grupines_treniruotes_sesija_id`),
+  INDEX `fk_kliento_grupines_treniruotes_sesija_klientas1_idx` (`klientas_id`),
+  INDEX `fk_kliento_grupines_treniruotes_sesija_grupines_treniruotes_idx` (`grupines_treniruotes_sesija_id`),
   CONSTRAINT `fk_kliento_grupines_treniruotes_sesija_klientas1`
     FOREIGN KEY (`klientas_id`)
     REFERENCES `gym2`.`klientas` (`id`)
@@ -747,7 +820,7 @@ DROP TABLE IF EXISTS `gym2`.`paslauga` ;
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `gym2`.`paslauga` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `pavadinimas` VARCHAR(45) NOT NULL,
+  `pavadinimas` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`id`)
 )
 ENGINE = InnoDB;
@@ -761,8 +834,8 @@ DROP TABLE IF EXISTS `gym2`.`narystes_paslauga` ;
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `gym2`.`narystes_paslauga` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `paslauga_id` INT NOT NULL,
   `naryste_id` INT NOT NULL,
+  `paslauga_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_narystes_paslauga_paslauga1_idx` (`paslauga_id`),
   INDEX `fk_narystes_paslauga_naryste1_idx` (`naryste_id`), 
@@ -777,6 +850,22 @@ ENGINE = InnoDB;
 SHOW WARNINGS;
 
 -- -----------------------------------------------------
+-- Table `gym2`.`gamintojas`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `gym2`.`gamintojas` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `gym2`.`gamintojas` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `pavadinimas` VARCHAR(100) NOT NULL UNIQUE,
+  `aprasymas` VARCHAR(255) NULL,
+  PRIMARY KEY (`id`)
+)
+ENGINE = InnoDB;
+SHOW WARNINGS;
+
+
+-- -----------------------------------------------------
 -- Table `gym2`.`inventoriaus_elementas`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `gym2`.`inventoriaus_elementas` ;
@@ -784,10 +873,16 @@ DROP TABLE IF EXISTS `gym2`.`inventoriaus_elementas` ;
 SHOW WARNINGS;
 CREATE TABLE IF NOT EXISTS `gym2`.`inventoriaus_elementas` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `gamintojas_id` INT NOT NULL,
   `pavadinimas` VARCHAR(45) NOT NULL,
-  `aprasymas` VARCHAR(510) NULL,
-  `gamintojas` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`)
+  `aprasymas` VARCHAR(255) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_inventoriaus_elementas_gamintojas1_idx` (`gamintojas_id`),
+  CONSTRAINT `fk_inventoriaus_elementas_gamintojas1`
+    FOREIGN KEY (`gamintojas_id`)
+    REFERENCES `gym2`.`gamintojas` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
 )
 ENGINE = InnoDB;
 SHOW WARNINGS;
@@ -802,7 +897,7 @@ CREATE TABLE IF NOT EXISTS `gym2`.`sporto_klubo_inventorius` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `sporto_klubo_filialas_id` INT NOT NULL,
   `inventoriaus_elementas_id` INT NOT NULL,
-  `kiekis` INT NULL,
+  `kiekis` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `fk_sporto_klubo_inventorius_sporto_klubo_filialas1_idx` (`sporto_klubo_filialas_id`),
   INDEX `fk_sporto_klubo_inventorius_inventoriaus_elementas1_idx` (`inventoriaus_elementas_id`),
