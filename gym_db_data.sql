@@ -1,8 +1,6 @@
 INSERT INTO `gym2`.`miestas` (`pavadinimas`) VALUES
 ('Vilnius'),
-('Kaunas'),
-('Panevezys');
-
+('Kaunas');
 
 INSERT INTO `gym2`.`klientas` (`vardas`, `pavarde`, `asmens_kodas`, `adresas`, `miestas_id`) VALUES
 ('Jonas', 'Kazlauskas', '39001010001', 'Gedimino pr. 10', 1),
@@ -106,87 +104,66 @@ VALUES
 (10, 'NFC-0010', 3);
 
 INSERT INTO `gym2`.`sporto_klubas` (`pavadinimas`, `telefonas`) VALUES
-('Titanas Gym', '+37061234567'),
-('Forma Fitness', '+37069876543'),
-('Energija Klubas', '+37061211223');
-
+('Titanas Gym', '+37061234567');
 
 INSERT INTO `gym2`.`sporto_klubo_filialas` (`sporto_klubas_id`, `miestas_id`, `adresas`) VALUES
 -- Titanas Gym
 (1, 1, 'Gedimino pr. 10'),
 (1, 1, 'Kalvarijų g. 22'),
-(1, 1, 'Ozo g. 5'),
-(1, 2, 'Savanorių pr. 100'),
-(1, 2, 'Kovo 11-osios g. 33'),
-(1, 2, 'Karaliaus Mindaugo pr. 1'),
+(1, 1, 'Ozo g. 5');
 
--- Forma Fitness
-(2, 1, 'Žirmūnų g. 15'),
-(2, 1, 'Naugarduko g. 20'),
-(2, 1, 'Pylimo g. 7'),
-(2, 2, 'Vilniaus g. 45'),
-(2, 2, 'Taikos pr. 77'),
-(2, 2, 'Laisvės al. 12'),
+-- Klientas 1 with CARD-0001 (id=1), visiting filialas_id=1
+INSERT INTO `gym2`.`kliento_apsilankymas` (`apsilankymo_laikas`, `sporto_klubo_filialas_id`, `kliento_identifikavimas_id`) VALUES
+('2025-06-01 08:15:00', 1, 1),
+('2025-06-03 07:50:00', 1, 1),
+('2025-06-05 08:05:00', 1, 1);
 
--- Energija Klubas
-(3, 1, 'Antakalnio g. 4'),
-(3, 1, 'Šeškinės g. 18'),
-(3, 1, 'Viršuliškių g. 11'),
-(3, 2, 'Pramonės pr. 19'),
-(3, 2, 'Šilainiai g. 5'),
-(3, 2, 'Radvilėnų pl. 10'),
+-- Klientas 2 with CARD-0002 (id=2), visiting filialas_id=2
+INSERT INTO `gym2`.`kliento_apsilankymas` (`apsilankymo_laikas`, `sporto_klubo_filialas_id`, `kliento_identifikavimas_id`) VALUES
+('2025-06-02 18:20:00', 2, 2),
+('2025-06-04 18:15:00', 2, 2),
+('2025-06-06 17:55:00', 2, 2);
 
+-- Klientas 2 with PIN-0002 (id=3), same filialas
+INSERT INTO `gym2`.`kliento_apsilankymas` (`apsilankymo_laikas`, `sporto_klubo_filialas_id`, `kliento_identifikavimas_id`) VALUES
+('2025-06-02 18:21:00', 2, 3),
+('2025-06-04 18:16:00', 2, 3);
 
-INSERT INTO `gym2`.`kliento_apsilankymas` 
-(`sporto_klubo_filialas_id`, `kliento_identifikavimas_id`)
-VALUES
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5),
-(6, 6),
-(7, 7),
-(8, 8),
-(9, 9),
-(10, 10),
-(11, 11),
-(12, 12),
-(13, 13),
-(14, 14),
-(1, 2),
-(2, 4),
-(3, 6),
-(4, 10),
-(5, 12),
-(6, 14);
+-- Klientas 3 with NFC-0003 (id=4), visiting filialas_id=3
+INSERT INTO `gym2`.`kliento_apsilankymas` (`apsilankymo_laikas`, `sporto_klubo_filialas_id`, `kliento_identifikavimas_id`) VALUES
+('2025-06-01 10:00:00', 3, 4),
+('2025-06-05 10:15:00', 3, 4),
+('2025-06-07 10:10:00', 3, 4);
+
+-- Klientas 4 with PIN-0004 (id=5), visiting filialas_id=1
+INSERT INTO `gym2`.`kliento_apsilankymas` (`apsilankymo_laikas`, `sporto_klubo_filialas_id`, `kliento_identifikavimas_id`) VALUES
+('2025-06-03 07:45:00', 1, 5),
+('2025-06-06 07:40:00', 1, 5);
 
 
 INSERT INTO `gym2`.`pardavejas`
 (`sporto_klubas_id`, `miestas_id`, `adresas`, `pavadinimas`, `imones_kodas`, `pvm_moketojo_kodas`, `banko_pavadinimas`, `banko_saskaita`)
 VALUES
-(1, 1, 'Gedimino pr. 10, Vilnius', 'UAB Titanas Gym', '302123456', 'LT100012345617', 'Swedbank', 'LT12 7300 0101 1234 5678'),
-(2, 1, 'Savanorių pr. 100, Kaunas', 'AB Forma Fitness', '304654321', 'LT100065432198', 'SEB bankas', 'LT33 7044 0510 9876 5432'),
-(3, 3, 'Respublikos g. 12, Panevezys', 'UAB Energija Klubas', '303789456', 'LT100078945612', 'Luminor', 'LT44 4010 0424 6789 3210');
+(1, 1, 'Gedimino pr. 10, Vilnius', 'UAB Titanas Gym', '302123456', 'LT100012345617', 'Swedbank', 'LT12 7300 0101 1234 5678');
 
 
 
 -- Juridinis asmuo (companies)
 INSERT INTO `gym2`.`saskaita` (`juridinis_asmuo_id`, `pardavejas_id`, `paslaugu_menuo`, `saskaitos_formavimo_data`, `apmokejimo_data`, `apmokejimo_terminas_iki`, `busena`, `saskaitos_numeris`) VALUES
 (1, 1, '2025-05-01', '2025-05-01', '2025-05-10', '2025-05-15', 'apmoketa', 'JUR-001-202505'),
-(2, 2, '2025-05-01', '2025-05-01', NULL, '2025-05-20', 'neapmoketa', 'JUR-002-202505'),
+(2, 1, '2025-05-01', '2025-05-01', NULL, '2025-05-20', 'neapmoketa', 'JUR-002-202505'),
 (3, 1, '2025-06-01', '2025-06-01', '2025-06-07', '2025-06-15', 'apmoketa', 'JUR-003-202506'),
-(4, 3, '2025-06-01', '2025-06-01', NULL, '2025-06-25', 'neapmoketa', 'JUR-004-202506'),
-(5, 2, '2025-04-01', '2025-04-01', '2025-04-15', '2025-04-20', 'apmoketa', 'JUR-005-202504'),
+(4, 1, '2025-06-01', '2025-06-01', NULL, '2025-06-25', 'neapmoketa', 'JUR-004-202506'),
+(5, 1, '2025-04-01', '2025-04-01', '2025-04-15', '2025-04-20', 'apmoketa', 'JUR-005-202504'),
 (6, 1, '2025-03-01', '2025-03-01', NULL, '2025-03-20', 'neapmoketa', 'JUR-006-202503');
 
 -- Klientas (individuals)
 INSERT INTO `gym2`.`saskaita` (`klientas_id`, `pardavejas_id`, `paslaugu_menuo`, `saskaitos_formavimo_data`, `apmokejimo_data`, `apmokejimo_terminas_iki`, `busena`, `saskaitos_numeris`) VALUES
 (2, 1, '2025-05-01', '2025-05-01', '2025-05-12', '2025-05-15', 'apmoketa', 'KLI-002-202505'),
-(4, 2, '2025-06-01', '2025-06-01', NULL, '2025-06-20', 'neapmoketa', 'KLI-004-202506'),
-(6, 3, '2025-06-01', '2025-06-01', NULL, '2025-06-15', 'neapmoketa', 'KLI-006-202506'),
+(4, 1, '2025-06-01', '2025-06-01', NULL, '2025-06-20', 'neapmoketa', 'KLI-004-202506'),
+(6, 1, '2025-06-01', '2025-06-01', NULL, '2025-06-15', 'neapmoketa', 'KLI-006-202506'),
 (8, 1, '2025-04-01', '2025-04-01', '2025-04-09', '2025-04-15', 'apmoketa', 'KLI-008-202504'),
-(10, 2, '2025-03-01', '2025-03-01', NULL, '2025-03-20', 'neapmoketa', 'KLI-010-202503');
+(10, 1, '2025-03-01', '2025-03-01', NULL, '2025-03-20', 'neapmoketa', 'KLI-010-202503');
 
 
 
@@ -267,60 +244,203 @@ INSERT INTO `gym2`.`asmeninis_treneris` (`vardas`, `pavarde`) VALUES
 ('Vaida', 'Girdauskienė');
 
 
--- Coaches 1–4 work at 2 clubs each
 INSERT INTO `gym2`.`asmeninio_trenerio_klubas` (`asmeninis_treneris_id`, `sporto_klubo_filialas_id`) VALUES
+-- Coaches 1–4 work at 2 clubs each (distribute across 1–3)
 (1, 1),
 (1, 2),
 (2, 2),
 (2, 3),
 (3, 3),
-(3, 4),
-(4, 4),
-(4, 5),
+(3, 1),
+(4, 1),
+(4, 3),
 
--- Coaches 5 and 6 work at same 2 clubs (filialas 5 and 6)
-(5, 5),
-(5, 6),
-(5, 7),
-(6, 6),
-(6, 7),
-(6, 8),
+-- Coaches 5 and 6 work at same 2 clubs (e.g. 2 and 3)
+(5, 2),
+(5, 3),
+(6, 2),
+(6, 3),
 
--- Coaches 7–24 assigned uniquely to one filialas
+-- Coaches 7–24 assigned uniquely to one of the 3 clubs (cycled)
 (7, 1),
-(8, 1),
-(9, 2),
-(10, 2),
-(11, 3),
+(8, 2),
+(9, 3),
+(10, 1),
+(11, 2),
 (12, 3),
-(13, 4),
-(14, 4),
-(15, 5),
-(16, 5),
-(17, 6),
-(18, 6),
+(13, 1),
+(14, 2),
+(15, 3),
+(16, 1),
+(17, 2),
+(18, 3),
 (19, 1),
 (20, 2),
 (21, 3),
-(22, 4),
-(23, 5),
-(24, 6);
-
+(22, 1),
+(23, 2),
+(24, 3);
 
 INSERT INTO `gym2`.`pareigos` (`pavadinimas`) VALUES
-('Administratorius'),
 ('Valytojas'),
+('Administratorius')
 ('Buhalteris'),
-('Treneris'),
-('Registratorius'),
 ('Techninės priežiūros specialistas'),
 ('Marketingo specialistas'),
-('Personalas'),
 ('Vadovas'),
 ('Klientų aptarnavimo specialistas'),
-('Saugos darbuotojas'),
-('Mitybos konsultantas'),
-('Fizinės terapijos specialistas'),
 ('IT specialistas');
+
+
+INSERT INTO `gym2`.`darbuotojas` (`vardas`, `pavarde`, `sporto_klubas_id`, `pareigos_id`) VALUES
+
+-- Only in 'Titanas Gym'  
+-- IT specialistas (3)
+('Tomas', 'Petraitis', 1, 8),
+('Eglė', 'Žemaitė', 1, 8),
+('Martynas', 'Stankus', 1, 8),
+
+-- Klientų aptarnavimo specialistas (3)
+('Greta', 'Bartašiūtė', 1, 7),
+('Andrius', 'Sabaliauskas', 1, 7),
+('Ieva', 'Grigonienė', 1, 7),
+
+-- Valytojas (5)
+('Dalia', 'Jankauskaitė', 1, 1),
+('Romas', 'Kairys', 1, 1),
+('Neringa', 'Aleknienė', 1, 1),
+('Jonas', 'Urbonas', 1, 1),
+('Viktorija', 'Kučinskaitė', 1, 1);
+
+('Laura', 'Stonienė', 1, 2);
+('Mantas', 'Kvedaras', 1, 3);
+('Aivaras', 'Vasiliauskas', 1, 4);
+('Justina', 'Šarka', 1, 5);
+('Saulius', 'Bieliauskas', 1, 6);
+
+INSERT INTO `gym2`.`el_pasto_paskirtis` (`pavadinimas`) VALUES
+('Reklamos galimybės'),
+('Žiniasklaidai ir spaudai'),
+('Pasiūlymai dėl IT sistemų ir programėlių'),
+('Sporto narystes įmonėms'),
+('Bendra Informacija'),
+('Pasiūlymai plėtrai'),
+('Atsiliepimai ir skundai');
+
+
+INSERT INTO `gym2`.`el_pastas` (`el_pasto_adresas`, `sporto_klubas_id`, `el_pasto_paskirtis_id`) VALUES
+('reklama@titanasgym.lt', 1, 1),
+('media@titanasgym.lt', 1, 2),
+('it@titanasgym.lt', 1, 3),
+('imonems@titanasgym.lt', 1, 4),
+('info@titanasgym.lt', 1, 5),
+('pletra@titanasgym.lt', 1, 6),
+('atsiliepimai@titanasgym.lt', 1, 7);
+
+INSERT INTO `gym2`.`grupes_treneris` (`vardas`, `pavarde`) VALUES
+('Greta', 'Sabaliauskaitė'),
+('Mantas', 'Kvietkus'),
+('Simona', 'Petrauskienė'),
+('Lukas', 'Bieliauskas'),
+('Agnė', 'Mickutė'),
+('Tomas', 'Valančius');
+
+-- Greta works at filialas 1 and 2
+INSERT INTO `gym2`.`grupes_trenerio_klubas` (`grupes_treneris_id`, `sporto_klubo_filialas_id`) VALUES
+(1, 1),
+(2, 1),
+(3, 2),
+(4, 2),
+(5, 3),
+(6, 3),
+(2, 3);
+
+INSERT INTO `gym2`.`mokejimo_daznis` (`aprasymas`) VALUES
+('Mokėjimas kas mėnesi'),
+('Mokėjimas kas puse metų'),
+('Mokėjimas už metus');
+
+INSERT INTO `gym2`.`kliento_abonementas`
+(klientas_id, narystes_pasiulymas_id, mokejimo_daznis_id, sutarties_numeris, galiojimo_pradzia, galiojimo_pabaiga, statusas) VALUES
+-- Klientas 1
+(1, 1, 1, 'SUT-0001', '2023-01-01', '2024-01-01', 'aktyvuotas'),
+-- Klientas 2 (galiojimo_pabaiga NULL, paying monthly (id=1))
+(2, 2, 1, 'SUT-0002', '2023-06-01', NULL, 'aktyvuotas'),
+-- Klientas 3, two abonementai, consecutive years, both ended
+(3, 3, 3, 'SUT-0003', '2021-08-01', '2022-08-01', 'neaktyvuotas'),
+(3, 3, 3, 'SUT-0004', '2022-08-01', '2023-08-01', 'neaktyvuotas'),
+(3, 5, 3, 'SUT-0005','2023-08-01', NULL, 'aktyvuotas'),
+-- Klientas 4
+(4, 4, 2, 'SUT-0005', '2023-03-15', '2024-03-15', 'aktyvuotas'),
+-- Klientas 5
+(5, 5, 1, 'SUT-0006', '2023-05-01', '2024-05-01', 'aktyvuotas');
+
+
+
+INSERT INTO `gym2`.`asmenine_treniruote`
+(asmeninis_treneris_id, sporto_klubo_filialas_id, klientas_id, treniruotes_pradzia, treniruotes_pabaiga) VALUES
+
+-- klientas 1 with coach 4, one session
+(4, 1, 1, '2023-05-01 10:00:00', '2023-05-01 11:00:00'),
+
+-- klientas 1 switched to coach 1, three sessions 3 days apart
+(1, 1, 1, '2023-05-10 09:00:00', '2023-05-10 10:00:00'),
+(1, 1, 1, '2023-05-13 09:00:00', '2023-05-13 10:00:00'),
+(1, 1, 1, '2023-05-16 09:00:00', '2023-05-16 10:00:00'),
+
+-- coach 2 trains klientas 4, 5, 6 (one session each, different filialai)
+(2, 2, 4, '2023-06-01 14:00:00', '2023-06-01 15:00:00'),
+(2, 3, 5, '2023-06-02 15:00:00', '2023-06-02 16:00:00'),
+(2, 1, 6, '2023-06-03 16:00:00', '2023-06-03 17:00:00'),
+
+-- other trainers with one klientas each
+(3, 2, 2, '2023-07-01 10:00:00', '2023-07-01 11:00:00'),
+(5, 3, 3, '2023-07-02 11:00:00', '2023-07-02 12:00:00');
+
+INSERT INTO `gym2`.`grupine_treniruote` (`pavadinimas`, `intensyvumas`, `sudetingumas`) VALUES
+('Joga pradedantiesiems', 'zemas', 'zemas'),
+('HIIT kardio', 'aukstas', 'aukstas'),
+('Pilates', 'vidutinis', 'vidutinis');
+
+INSERT INTO `gym2`.`grupines_treniruotes_sesija` 
+(`pradzios_laikas`, `pabaigos_laikas`, `grupes_treneris_id`, `sporto_klubo_filialas_id`, `grupine_treniruote_id`) VALUES
+
+('2025-07-01 08:00:00', '2025-07-01 09:00:00', 1, 1, 1),  
+('2025-07-01 18:00:00', '2025-07-01 19:00:00', 2, 2, 2),  
+('2025-07-02 07:00:00', '2025-07-02 08:00:00', 3, 1, 3),  
+('2025-07-02 19:00:00', '2025-07-02 20:00:00', 4, 3, 3),  
+('2025-07-03 17:00:00', '2025-07-03 18:00:00', 5, 1, 2),  
+('2025-07-04 08:00:00', '2025-07-04 09:00:00', 1, 2, 1),  
+('2025-07-04 18:00:00', '2025-07-04 19:00:00', 2, 3, 2);  
+
+INSERT INTO `gym2`.`kliento_grupines_treniruotes_sesija` (`klientas_id`, `grupines_treniruotes_sesija_id`) VALUES
+-- Session 1 (Joga pradedantiesiems, treneris 1, filialas 1)
+(1, 1),
+(2, 1),
+(3, 1),
+(4, 1),
+-- Session 2 (HIIT kardio, treneris 2, filialas 2)
+(5, 2),
+(6, 2),
+(7, 2),
+-- Session 3 (Pilates, treneris 3, filialas 1)
+(8, 3),
+(9, 3),
+(10, 3),
+-- Session 4 (Pilates, treneris 4, filialas 3)
+(1, 4),
+(2, 4),
+-- Session 5 (HIIT kardio, treneris 5, filialas 1)
+(3, 5),
+(4, 5),
+(5, 5),
+-- Session 6 (Joga pradedantiesiems, treneris 1, filialas 2)
+(6, 6),
+(7, 6),
+(8, 6),
+-- Session 7 (HIIT kardio, treneris 2, filialas 3)
+(9, 7),
+(10, 7);
+
 
 
