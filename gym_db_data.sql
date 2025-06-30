@@ -2,30 +2,57 @@ INSERT INTO `gym2`.`miestas` (`pavadinimas`) VALUES
 ('Vilnius'),
 ('Kaunas');
 
-INSERT INTO `gym2`.`klientas` (`vardas`, `pavarde`, `asmens_kodas`, `adresas`, `miestas_id`) VALUES
-('Jonas', 'Kazlauskas', '39001010001', 'Gedimino pr. 10', 1),
-('Ieva', 'Petrauskaitė', '49102020002', 'Žirmūnų g. 15-3', 1),
-('Tomas', 'Jankauskas', '38503150003', 'Kalvarijų g. 33', 1),
-('Monika', 'Stankevičiūtė', '49804040004', 'Ozo g. 7', 1),
-('Darius', 'Bieliauskas', '38005050005', 'Savanorių pr. 100', 2),
-('Simona', 'Vaitkutė', '49506060006', 'Taikos pr. 55', 2),
-('Rokas', 'Urbonas', '38707070007', 'A. Mickevičiaus g. 12', 2),
-('Eglė', 'Paulauskaitė', '49208080008', 'Kovo 11-osios g. 20', 2),
-('Mantas', 'Žukauskas', '38909090009', 'Naugarduko g. 3', 1),
-('Greta', 'Sabaliauskaitė', '49410100010', 'Laisvės pr. 66', 1);
+INSERT INTO `gym2`.`adresas` (`gatve`, `namo_numeris`, `miestas_id`) VALUES
+('Gedimino pr.', '10', 1),
+('Žirmūnų g.', '15-3', 1),
+('Kalvarijų g.', '33', 1),
+('Ozo g.', '7', 1),
+('Savanorių pr.', '100', 2),
+('Taikos pr.', '55', 2),
+('A. Mickevičiaus g.', '12', 2),
+('Kovo 11-osios g.', '20', 2),
+('Naugarduko g.', '3', 1),
+('Laisvės pr.', '66', 1),
+----
+('Vilniaus g.', '10', 1),
+('Kauno g.', '20', 2),
+('Gedimino pr.', '15', 1),
+('Taikos pr.', '5', 2),
+('Savanorių pr.', '30', 1),
+('Kęstučio g.', '45', 2),
+('A. Mickevičiaus g.', '11', 1),
+('Vilkpėdės g.', '50', 2),
+('Laisvės al.', '23', 1),
+('Žalgirio g.', '9', 2),
+----
+('Kalvarijų g', '22', 1),
+('Ozo g.', '5', 2),
+('Mėtų g.', '33', 1);
+
+INSERT INTO `gym2`.`klientas` (`vardas`, `pavarde`, `asmens_kodas`, `adresas_id`) VALUES
+(1, 'Jonas', 'Kazlauskas', '39001010001', 1),
+(2, 'Ieva', 'Petrauskaitė', '49102020002', 2),
+(3, 'Tomas', 'Jankauskas', '38503150003', 3),
+(4, 'Monika', 'Stankevičiūtė', '49804040004', 4),
+(5, 'Darius', 'Bieliauskas', '38005050005', 5),
+(6, 'Simona', 'Vaitkutė', '49506060006', 6),
+(7, 'Rokas', 'Urbonas', '38707070007', 7),
+(8, 'Eglė', 'Paulauskaitė', '49208080008', 8),
+(9, 'Mantas', 'Žukauskas', '38909090009', 9),
+(10, 'Greta', 'Sabaliauskaitė', '49410100010', 10);
 
 INSERT INTO `gym2`.`juridinis_asmuo` 
-(`pavadinimas`, `pvm_moketojo_kodas`, `imones_kodas`, `adresas`, `miestas_id`) VALUES
-('UAB Fitness Solutions', 'LT100200300', '3030303030303', 'Vilniaus g. 10', 1),
-('AB Sporto Klubas', 'LT200300400', '4040404040404', 'Kauno g. 20', 2),
-('UAB GymPro', 'LT300400500', '5050505050505', 'Gedimino pr. 15', 1),
-('UAB Active Life', 'LT400500600', '6060606060606', 'Taikos pr. 5', 2),
-('UAB Sportas Plus', 'LT500600700', '7070707070707', 'Savanorių pr. 30', 1),
-('UAB Healthy Move', 'LT600700800', '8080808080808', 'Kęstučio g. 45', 2),
-('UAB Fit4Life', 'LT700800900', '9090909090909', 'A. Mickevičiaus g. 11', 1),
-('UAB Strong Body', 'LT800900100', '1010101010101', 'Vilkpėdės g. 50', 2),
-('UAB Gym Active', 'LT900100200', '2020202020202', 'Laisvės al. 23', 1),
-('UAB Power Gym', 'LT100200300', '3030303030304', 'Žalgirio g. 9', 2);
+(`pavadinimas`, `pvm_moketojo_kodas`, `imones_kodas`, `adresas_id`) VALUES
+('UAB Fitness Solutions', 'LT100200300', '3030303030303', 11),
+('AB Sporto Klubas', 'LT200300400', '4040404040404', 12),
+('UAB GymPro', 'LT300400500', '5050505050505', 13),
+('UAB Active Life', 'LT400500600', '6060606060606', 14),
+('UAB Sportas Plus', 'LT500600700', '7070707070707', 15),
+('UAB Healthy Move', 'LT600700800', '8080808080808', 16),
+('UAB Fit4Life', 'LT700800900', '9090909090909', 17), 
+('UAB Strong Body', 'LT800900100', '1010101010101', 18),
+('UAB Gym Active', 'LT900100200', '2020202020202', 29),
+('UAB Power Gym', 'LT100200300', '3030303030304', 20);
 
 INSERT INTO `gym2`.`naryste` (`pavadinimas`, `menesio_kaina`) VALUES
 ('Start', 19.99),
@@ -65,18 +92,19 @@ INSERT INTO `gym2`.`paskyros_busena` (`pavadinimas`) VALUES
 ('Uzblokuota');
 
 INSERT INTO `gym2`.`kliento_paskyra` 
-(`klientas_id`, `el_pastas`, `slaptazodis_hash`, `paskyros_busena_id`)
+(`klientas_id`, `el_pastas`, `slaptazodis_hash`, `paskyros_busena_id`, `sukurimo_data`)
 VALUES
-(1, 'Jonas.Kazlauskas@gmail.com', '$2y$10$abc123abc123abc123abc1', 1),
-(2, 'Ieva.Petrauskaitė@gmail.com', '$2y$10$def456def456def456def4', 1),
-(3, 'Tomas.Jankauskas@gmail.com', '$2y$10$ghi789ghi789ghi789ghi7', 1),
-(4, 'Monika.Stankevičiūtė@gmail.com', '$2y$10$jkl012jkl012jkl012jkl0', 1),
-(5, 'Darius.Bieliauskas@gmail.com', '$2y$10$mno345mno345mno345mno3', 2),
-(6, 'Simona.Vaitkutė@gmail.com', '$2y$10$pqr678pqr678pqr678pqr6', 1),
-(7, 'Rokas.Urbonas@gmail.com', '$2y$10$stu901stu901stu901stu9', 3),
-(8, 'Eglė.Paulauskaitė@gmail.com', '$2y$10$vwx234vwx234vwx234vwx2', 1),
-(9, 'Mantas.Žukauskas@gmail.com', '$2y$10$yz1234yz1234yz1234yz12', 1),
-(10, 'Greta.Sabaliauskaitė@gmail.com', '$2y$10$zxc567zxc567zxc567zxc5', 4);
+(1, 'Jonas.Kazlauskas@gmail.com',     '$2y$10$abc123abc123abc123abc1', 1, '2024-06-01 09:00:00'),
+(2, 'Ieva.Petrauskaitė@gmail.com',    '$2y$10$def456def456def456def4', 1, '2022-06-02 09:15:00'),
+(3, 'Tomas.Jankauskas@gmail.com',     '$2y$10$ghi789ghi789ghi789ghi7', 1, '2024-06-03 10:00:00'),
+(4, 'Monika.Stankevičiūtė@gmail.com', '$2y$10$jkl012jkl012jkl012jkl0', 1, '2023-06-04 11:30:00'),
+(5, 'Darius.Bieliauskas@gmail.com',   '$2y$10$mno345mno345mno345mno3', 2, '2024-06-05 12:00:00'),
+(6, 'Simona.Vaitkutė@gmail.com',      '$2y$10$pqr678pqr678pqr678pqr6', 1, '2023-06-06 14:10:00'),
+(7, 'Rokas.Urbonas@gmail.com',        '$2y$10$stu901stu901stu901stu9', 3, '2024-06-07 08:45:00'),
+(8, 'Eglė.Paulauskaitė@gmail.com',    '$2y$10$vwx234vwx234vwx234vwx2', 1, '2024-06-08 16:20:00'),
+(9, 'Mantas.Žukauskas@gmail.com',     '$2y$10$yz1234yz1234yz1234yz12', 1, '2024-06-09 13:35:00'),
+(10, 'Greta.Sabaliauskaitė@gmail.com','$2y$10$zxc567zxc567zxc567zxc5', 4, '2024-06-10 10:25:00');
+
 
 INSERT INTO `gym2`.`identifikavimo_tipas` (`pavadinimas`, `aprasymas`) VALUES
 ('kortele', 'Fizinis plastikinis įėjimo leidimas'),
@@ -106,11 +134,11 @@ VALUES
 INSERT INTO `gym2`.`sporto_klubas` (`pavadinimas`, `telefonas`) VALUES
 ('Titanas Gym', '+37061234567');
 
-INSERT INTO `gym2`.`sporto_klubo_filialas` (`sporto_klubas_id`, `miestas_id`, `adresas`) VALUES
+INSERT INTO `gym2`.`sporto_klubo_filialas` (`sporto_klubas_id`, `adresas_id`) VALUES
 -- Titanas Gym
-(1, 1, 'Gedimino pr. 10'),
-(1, 1, 'Kalvarijų g. 22'),
-(1, 1, 'Ozo g. 5');
+(1, 1,),
+(1, 21),
+(1, 23);
 
 -- Klientas 1 with CARD-0001 (id=1), visiting filialas_id=1
 INSERT INTO `gym2`.`kliento_apsilankymas` (`apsilankymo_laikas`, `sporto_klubo_filialas_id`, `kliento_identifikavimas_id`) VALUES
@@ -142,10 +170,9 @@ INSERT INTO `gym2`.`kliento_apsilankymas` (`apsilankymo_laikas`, `sporto_klubo_f
 
 
 INSERT INTO `gym2`.`pardavejas`
-(`sporto_klubas_id`, `miestas_id`, `adresas`, `pavadinimas`, `imones_kodas`, `pvm_moketojo_kodas`, `banko_pavadinimas`, `banko_saskaita`)
+(`sporto_klubas_id`, `adresas_id`, `pavadinimas`, `imones_kodas`, `pvm_moketojo_kodas`, `banko_pavadinimas`, `banko_saskaita`)
 VALUES
-(1, 1, 'Gedimino pr. 10, Vilnius', 'UAB Titanas Gym', '302123456', 'LT100012345617', 'Swedbank', 'LT12 7300 0101 1234 5678');
-
+(1, 23, 'UAB Titanas Gym', '302123456', 'LT100012345617', 'Swedbank', 'LT12 7300 0101 1234 5678');
 
 
 -- Juridinis asmuo (companies)
@@ -192,8 +219,6 @@ INSERT INTO `gym2`.`apmokejimo_budas` (`aprasymas`) VALUES
 ('Mobilioji programėlė'),
 ('Banko pavedimu');
 
-
-
 INSERT INTO `gym2`.`apmokejimas` (`saskaita_id`, `apmokejimo_budas_id`, `suma`) VALUES
 (1, 1, 120.00),   -- el. bankininkystė
 (3, 2, 89.99),    -- grynieji
@@ -201,8 +226,6 @@ INSERT INTO `gym2`.`apmokejimas` (`saskaita_id`, `apmokejimo_budas_id`, `suma`) 
 (7, 1, 59.00),    -- el. bankininkystė
 (10, 3, 45.00),   -- dovanų kuponas
 (11, 1, 72.30);   -- el. bankininkystė
-
-
 
 INSERT INTO `gym2`.`kliento_telefonas` (`telefonas`, `klientas_id`) VALUES
 ('+37061234501', 1),
@@ -291,9 +314,7 @@ INSERT INTO `gym2`.`pareigos` (`pavadinimas`) VALUES
 ('Klientų aptarnavimo specialistas'),
 ('IT specialistas');
 
-
 INSERT INTO `gym2`.`darbuotojas` (`vardas`, `pavarde`, `sporto_klubas_id`, `pareigos_id`) VALUES
-
 -- Only in 'Titanas Gym'  
 -- IT specialistas (3)
 ('Tomas', 'Petraitis', 1, 8),
@@ -310,12 +331,12 @@ INSERT INTO `gym2`.`darbuotojas` (`vardas`, `pavarde`, `sporto_klubas_id`, `pare
 ('Romas', 'Kairys', 1, 1),
 ('Neringa', 'Aleknienė', 1, 1),
 ('Jonas', 'Urbonas', 1, 1),
-('Viktorija', 'Kučinskaitė', 1, 1);
+('Viktorija', 'Kučinskaitė', 1, 1),
 
-('Laura', 'Stonienė', 1, 2);
-('Mantas', 'Kvedaras', 1, 3);
-('Aivaras', 'Vasiliauskas', 1, 4);
-('Justina', 'Šarka', 1, 5);
+('Laura', 'Stonienė', 1, 2),
+('Mantas', 'Kvedaras', 1, 3),
+('Aivaras', 'Vasiliauskas', 1, 4),
+('Justina', 'Šarka', 1, 5),
 ('Saulius', 'Bieliauskas', 1, 6);
 
 INSERT INTO `gym2`.`el_pasto_paskirtis` (`pavadinimas`) VALUES
@@ -442,5 +463,107 @@ INSERT INTO `gym2`.`kliento_grupines_treniruotes_sesija` (`klientas_id`, `grupin
 (9, 7),
 (10, 7);
 
+INSERT INTO `gym2`.`paslauga` (`pavadinimas`) VALUES
+('Neribotas lankymas 24/7'),
+('Filtruotas vanduo'),
+('Nemokama įvadinė treniruotė'),
+('Visų klubų lankymas'),
+('Pirtis'),
+('Narystės „Atostogos“ iki 30 dienų'),
+('Sutarties perrašymas kitam asmeniui'),
+('REFORMER+ treniruotės'),
+('Soliariumas'),
+('Grupinės treniruotės'),
+('Galimybės už papildomą mokestį');
 
 
+-- Start narystė paslaugos
+INSERT INTO `gym2`.`narystes_paslauga` (`naryste_id`, `paslauga_id`) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 7);
+
+-- Easy narystė paslaugos (inherits Start + extra)
+INSERT INTO `gym2`.`narystes_paslauga` (`naryste_id`, `paslauga_id`) VALUES
+(2, 1),
+(2, 2),
+(2, 3),
+(2, 4),
+(2, 5),
+(2, 6),
+(2, 7),
+(2, 8),
+(2, 9),
+(2, 10);
+
+-- Flexi narystė
+INSERT INTO `gym2`.`narystes_paslauga` (`naryste_id`, `paslauga_id`) VALUES
+(3, 1),
+(3, 2),
+(3, 3),
+(3, 4),
+(3, 5),
+(3, 6),
+(3, 7),
+(3, 8),
+(3, 9),
+(3, 10),
+(3, 11);
+
+INSERT INTO `gym2`.`gamintojas` (`pavadinimas`, `aprasymas`) VALUES
+('Technogym', 'Itališkas sporto įrangos gamintojas, žinomas dėl aukštos kokybės treniruoklių'),
+('Rogue Fitness', 'Amerikiečių gamintojas, specializuojasi jėgos sporto įrangoje');
+
+INSERT INTO `gym2`.`inventoriaus_elementas` (`gamintojas_id`, `pavadinimas`, `aprasymas`) VALUES
+(1, 'Leg Press Machine', 'Technogym kojų spaudimo treniruoklis'),
+(1, 'Hack Squat Machine', 'Technogym įranga šlaunų treniruotei'),
+(1, 'Adjustable Bench', 'Reguliuojamas suolelis spaudimui'),
+(1, 'Cable Crossover', 'Daugiafunkcis treniruoklis viršutinei kūno daliai'),
+(1, 'Pull-up Bar Station', 'Stacionarus prisitraukimų rėmas'),
+
+(2, 'Squat Rack', 'Rogue tvirtas pritūpimų stovas'),
+(2, 'Barbell 20kg', 'Standartinė olimpinio svorio štanga'),
+(2, 'Dumbbell Set (2-30kg)', 'Pilnas hantelių komplektas nuo 2 iki 30kg'),
+(2, 'Flat Bench', 'Stacionarus suolelis štangos spaudimui'),
+(2, 'Deadlift Platform', 'Rogue platforma saugiam irklavimui ir traukai');
+
+-- Filialas 1 - Gedimino pr. 10
+INSERT INTO `gym2`.`sporto_klubo_inventorius` (`sporto_klubo_filialas_id`, `inventoriaus_elementas_id`, `kiekis`) VALUES
+(1, 6, 3),  
+(1, 3, 2),  
+(1, 4, 1),  
+(1, 5, 2),  
+(1, 8, 1),  
+(1, 7, 1),  
+(1, 9, 1), 
+(1, 1, 1),  
+(1, 10, 3); 
+
+-- Filialas 2 - Kalvarijų g. 22
+INSERT INTO `gym2`.`sporto_klubo_inventorius` (`sporto_klubo_filialas_id`, `inventoriaus_elementas_id`, `kiekis`) VALUES
+(2, 6, 3),
+(2, 3, 2),
+(2, 4, 1),
+(2, 5, 2),
+(2, 8, 1),
+(2, 7, 1),
+(2, 9, 1),
+(2, 2, 1),  
+(2, 10, 1); 
+
+-- Filialas 3 - Ozo g. 5
+INSERT INTO `gym2`.`sporto_klubo_inventorius` (`sporto_klubo_filialas_id`, `inventoriaus_elementas_id`, `kiekis`) VALUES
+(3, 6, 3),
+(3, 3, 2),
+(3, 4, 1),
+(3, 5, 2),
+(3, 8, 1),
+(3, 7, 1),
+(3, 9, 1),
+(3, 1, 1),  
+(3, 2, 1),
+(3, 10, 2); 
