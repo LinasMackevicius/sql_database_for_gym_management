@@ -8,8 +8,10 @@ SHOW WARNINGS;
 -- -----------------------------------------------------
 -- Schema gym2
 -- -----------------------------------------------------
+DROP DATABASE IF EXISTS `gym2`;
 CREATE SCHEMA IF NOT EXISTS `gym2` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_lithuanian_ci ;
 SHOW WARNINGS;
+USE `gym2`;
 -- -----------------------------------------------------
 -- Table `gym2`.`miestas`
 -- -----------------------------------------------------
